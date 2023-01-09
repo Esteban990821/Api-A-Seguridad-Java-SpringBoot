@@ -1,6 +1,7 @@
 package BackEndSeguridad.Seguridad.Models;
 
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import lombok.Data;
@@ -13,6 +14,8 @@ public class User {
     private String pseudonym;
     private String email;
     private String password;
+    @DBRef
+    private Role role;
     
     public User(String pseudonym, String email, String password) {
         this.pseudonym = pseudonym;
@@ -46,5 +49,13 @@ public class User {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public Role getRole() {
+        return role;
+    }
+
+    public void setRole(Role role) {
+        this.role = role;
     }
 }

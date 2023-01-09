@@ -17,7 +17,9 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.http.HttpStatus;
 
+import BackEndSeguridad.Seguridad.Models.Role;
 import BackEndSeguridad.Seguridad.Models.User;
+import BackEndSeguridad.Seguridad.Repositories.RoleRep;
 import BackEndSeguridad.Seguridad.Repositories.UserRep;
 
 @CrossOrigin
@@ -26,6 +28,9 @@ import BackEndSeguridad.Seguridad.Repositories.UserRep;
 public class UserController {
     @Autowired
     private UserRep myUserRep;
+
+    @Autowired
+    private RoleRep myRoleRep;
 
     @GetMapping("")
     public List<User> index(){
@@ -82,6 +87,22 @@ public class UserController {
             sb.append(String.format("%02x", b));
         }
         return sb.toString();
+    }
+
+    //--------------------------------- Metodo Rol-Usuario relacion [1-n]------------------------------
+
+    /**
+    * Relación (1 a n) entre rol y usuario
+    * @param id
+    * @param id_rol
+    * @return
+    */
+    @PutMapping("{id}/rol/{id_rol}")
+    public User asignarRolAUsuario(@PathVariable String id,@PathVariable String id_rol){
+        User currentUser=this.myUserRep.findById(id).orElseThrow(RuntimeException::new);
+        Role currentRole=this.myRoleRep.findById(id_rol).orElseThrow(RuntimeException::new);
+        currentUser.setRole(currentRole);
+        return this.myUserRep.save(currentUser);
     }
 
     
