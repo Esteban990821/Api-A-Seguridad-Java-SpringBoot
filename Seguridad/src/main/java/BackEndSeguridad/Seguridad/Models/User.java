@@ -23,7 +23,7 @@ public class User {
         this.password = password;
         }
 
-    public String get_Id() {
+    public String get_id() {
         return _id;
     }
 

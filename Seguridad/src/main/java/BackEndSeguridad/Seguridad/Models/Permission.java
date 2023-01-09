@@ -15,7 +15,7 @@ public class Permission {
         this.method = method;
     }
     
-    public String get_Id() {
+    public String get_id() {
         return _id;
     }
 
