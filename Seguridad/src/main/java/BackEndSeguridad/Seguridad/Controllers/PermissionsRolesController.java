@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
-
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
@@ -95,6 +95,18 @@ public class PermissionsRolesController {
         PermissionsRoles currentPermissionRole = this.myPermissionRolesRep.findById(id).orElse(null);
         if (currentPermissionRole!=null){
             this.myPermissionRolesRep.delete(currentPermissionRole);
+        }
+    }
+
+    //--------------------------------------Metodo de validacion------------------------------
+    @GetMapping("validar-permiso/rol/{id_role}")
+    public PermissionsRoles getPermiso(@PathVariable String id_role,@RequestBody Permission permissionInfo){
+        Permission thePermission=this.myPermissionRep.getPermission(permissionInfo.getUrl(),permissionInfo.getMethod());
+        Role theRole=this.myRoleRep.findById(id_role).get();
+        if (thePermission!=null && theRole!=null){
+            return this.myPermissionRolesRep.getPermisoRol(theRole.get_id(),thePermission.get_id());
+        }else{
+            return null;
         }
     }
 }

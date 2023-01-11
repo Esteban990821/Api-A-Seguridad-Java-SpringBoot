@@ -1,5 +1,6 @@
 package BackEndSeguridad.Seguridad.Controllers;
 
+import java.io.IOException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.List;
@@ -21,6 +22,7 @@ import BackEndSeguridad.Seguridad.Models.Role;
 import BackEndSeguridad.Seguridad.Models.User;
 import BackEndSeguridad.Seguridad.Repositories.RoleRep;
 import BackEndSeguridad.Seguridad.Repositories.UserRep;
+import jakarta.servlet.http.HttpServletResponse;
 
 @CrossOrigin
 @RestController
@@ -87,6 +89,18 @@ public class UserController {
             sb.append(String.format("%02x", b));
         }
         return sb.toString();
+    }
+    //------------------------------------------metodo para validar------------------------
+    @PostMapping("/validate")
+    public User validate(@RequestBody User UserInfo,final HttpServletResponse response) throws IOException {
+        User currentUser=this.myUserRep.getUserByEmail(UserInfo.getEmail());
+        if (currentUser!=null && currentUser.getPassword().equals(convertSHA256(UserInfo.getPassword()))) {
+            currentUser.setPassword("");
+            return currentUser;
+        }else{
+            response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
+            return null;
+        }
     }
 
     //--------------------------------- Metodo Rol-Usuario relacion [1-n]------------------------------
